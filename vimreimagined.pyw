@@ -249,6 +249,7 @@ root.mainloop()  # this runs the entire code
 # add more file extensions for users
 
 
+
 # ideas
 # built in calculator would be nice
 # highlighted font manipulation
