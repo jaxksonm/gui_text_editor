@@ -243,7 +243,7 @@ root.mainloop()  # this runs the entire code
 
 # project notes
 # high priority
-
+# words per minute counter
 
 # low priority:
 # add more file extensions for users
