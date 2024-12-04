@@ -1,4 +1,6 @@
-# vim reimagined - by Jackson McDonald
+# vim reimagined - by Jackson McDonald - v4!
+# version 4 is the latest version of the project
+
 import tkinter as tk
 from tkinter import font  # for font selection
 from tkinter import filedialog  # for saving the file
@@ -236,6 +238,7 @@ def word_counter():
 
 # current constraint of this is that the time function does not get counted
 text_box.bind("<KeyRelease>", lambda event: word_counter())  # the even happens when user presses a key
+
 root.mainloop()  # this runs the entire code
 
 # project notes
