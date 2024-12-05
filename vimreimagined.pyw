@@ -47,7 +47,7 @@ def fonts():
     size_dropdown.pack()
 
     # fill list with these colors, more can be added later
-    available_colors = ["green", "red", "blue", "yellow", "cyan", "magenta", "white", "black", "gold", "orange",
+    available_colors = ["green", "olive", "red", "blue", "yellow", "cyan", "magenta", "white", "black", "gold", "orange",
                         "brown", "pink", "teal", "aqua"]
     selected_color = tk.StringVar()  # store selected color
     color_label = tk.Label(font_window, text="Select Color:")
