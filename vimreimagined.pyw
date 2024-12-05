@@ -7,6 +7,7 @@ import time  # for getting the time for a time function
 from tkinter import simpledialog, messagebox  # for finding / replacing words
 
 
+# this new configuration of the project has a demo version of git integration
 # https://www.geeksforgeeks.org/python-gui-tkinter/ - list of useful tkinter tools
 
 # version 5 is here - text preferences now change on selection - apply buttons removed
@@ -193,6 +194,10 @@ def find_word():
             text_box.tag_configure("highlight", background="")
 
 
+def git_commit():
+    print("nothing here yet")
+
+
 root = tk.Tk()
 root.title("vim")
 root.geometry("400x400")  # notepad's dimensions - roughly
@@ -215,6 +220,9 @@ plus_button.pack(side=tk.LEFT, padx=5)
 
 find_and_replace_label = tk.Button(button_frame, text="Find", command=find_word)
 find_and_replace_label.pack(side=tk.LEFT, padx=5)
+
+git_hub_button = tk.Button(button_frame, text="GitHub", command=git_commit)
+git_hub_button.pack(side=tk.LEFT, padx=5)
 
 word_count_frame = tk.Frame(root)  # frame for word count label and char count label
 word_count_frame.pack(side=tk.BOTTOM, fill=tk.X, padx=10, pady=5)  # pack the word count frame at the bottom
