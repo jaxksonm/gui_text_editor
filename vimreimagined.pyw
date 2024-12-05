@@ -1,5 +1,4 @@
-# vim reimagined - by Jackson McDonald - v4!
-# version 4 is the latest version of the project
+# vim reimagined - by Jackson McDonald - v5!
 
 import tkinter as tk
 from tkinter import font  # for font selection
@@ -10,7 +9,7 @@ from tkinter import simpledialog, messagebox  # for finding / replacing words
 
 # https://www.geeksforgeeks.org/python-gui-tkinter/ - list of useful tkinter tools
 
-# version 4 - find and replace update is here!
+# version 5 is here - text preferences now change on selection - apply buttons removed
 
 # bold / italics were sadly removed in version 1 as they were deemed useless. RIP...
 # pack() is responsible for putting the buttons / windows on the GUI
@@ -24,12 +23,12 @@ def fonts():
     font_window = tk.Toplevel(root)
     font_window.title("Font Selector")
     # size can be expanded if more buttons are added
-    font_window.geometry("300x450")
+    font_window.geometry("300x300")
     # store selected font
     selected_font = tk.StringVar()
 
     # title above button
-    font_label = tk.Label(font_window, text="Select font")
+    font_label = tk.Label(font_window, text="Select Font")
     font_label.pack()
     font_dropdown = tk.OptionMenu(font_window, selected_font, *available_fonts, )  # * to format the list
     font_dropdown.pack()
@@ -48,7 +47,8 @@ def fonts():
     size_dropdown.pack()
 
     # fill list with these colors, more can be added later
-    available_colors = ["green", "red", "blue", "yellow", "cyan", "magenta", "white", "black"]
+    available_colors = ["green", "red", "blue", "yellow", "cyan", "magenta", "white", "black", "gold", "orange",
+                        "brown", "pink", "teal", "aqua"]
     selected_color = tk.StringVar()  # store selected color
     color_label = tk.Label(font_window, text="Select Color:")
     color_label.pack()
@@ -56,26 +56,32 @@ def fonts():
     color_dropdown = tk.OptionMenu(font_window, selected_color, *available_colors)
     color_dropdown.pack()
 
+    # the following selection functions update the preferences immediately after selection is made.
+    def font_selection_change(*args):
+        text_box.config(font=(selected_font.get() if selected_font.get()
+                              else "Times New Roman", selected_size.get()
+                              if selected_size.get() else 12))  # set default values
+
+    selected_font.trace("w", font_selection_change)  # if any selection is made call the function
+
+    def size_selection_change(*args):
+        text_box.config(font=(
+            selected_font.get() if selected_font.get() else "Times New Roman", (selected_size.get())
+            if selected_size.get() else 12))  # set default values
+
+    selected_size.trace("w", size_selection_change)  # if any selection is made call the function
+
+    def color_selection_change(*args):
+        text_box.config(
+            fg=selected_color.get() if selected_color.get() else "Black", font=(
+                selected_font.get() if selected_font.get() else "Times New Roman",
+                (selected_size.get())
+                if selected_size.get() else 12,))  # set default values
+
+    selected_color.trace("w", color_selection_change)  # if any selection is made call the function
+
     # buttons within "Font"
     # all buttons padded with (pady=10)
-    apply_font = tk.Button(font_window, text="Apply Font",
-                           command=lambda: text_box.config(font=(selected_font.get() if selected_font.get()
-                                                                 else "Times New Roman", selected_size.get()
-                                                                 if selected_size.get() else 12)))  # set default values
-    apply_font.pack(pady=10)
-
-    resize_text = tk.Button(font_window, text="Apply Size",
-                            command=lambda: text_box.config(font=(
-                                selected_font.get() if selected_font.get() else "Times New Roman", (selected_size.get())
-                                if selected_size.get() else 12)))  # set default values
-    resize_text.pack(pady=10)
-    apply_color = tk.Button(font_window, text="Apply Color",
-                            command=lambda: text_box.config(
-                                fg=selected_color.get() if selected_color.get() else "Black", font=(
-                                    selected_font.get() if selected_font.get() else "Times New Roman",
-                                    (selected_size.get())
-                                    if selected_size.get() else 12,)))  # set default values
-    apply_color.pack(pady=10)
 
     reset_button = tk.Button(font_window, text="Reset Settings",
                              command=lambda: text_box.config(insertbackground="black",
@@ -247,8 +253,6 @@ root.mainloop()  # this runs the entire code
 
 # low priority:
 # add more file extensions for users
-
-
 
 # ideas
 # built in calculator would be nice
