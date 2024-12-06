@@ -5,6 +5,7 @@ from tkinter import font  # for font selection
 from tkinter import filedialog  # for saving the file
 import time  # for getting the time for a time function
 from tkinter import simpledialog, messagebox  # for finding / replacing words
+import git  # for git hub integration
 
 
 # this new configuration of the project has a demo version of git integration
@@ -194,8 +195,57 @@ def find_word():
             text_box.tag_configure("highlight", background="")
 
 
-def git_commit():
-    print("nothing here yet")
+def get_git_repo():
+    # get the user's git repo
+    get_user_repo = simpledialog.askstring("Find", "Enter the path of your git repository:")
+    repo = git.Repo(get_user_repo)  # store the repo
+    return repo
+
+
+def git_commands():
+    # call get_git_repo and ask for the users repo
+    user_repo = get_git_repo()
+    git_window = tk.Toplevel(root)
+    git_window.title("Git Commands")
+    git_window.geometry("300x300")
+
+    # buttons with in "File"
+    # save file, saves file if they already have a name, else prompt save as
+    status_button = tk.Button(git_window, text="Status", command=lambda: git_status(repo=user_repo))
+    status_button.pack(pady=10)
+
+
+def git_status(repo):
+    status = repo.git.status()  # built in status command with gitpython
+    messagebox.showinfo("Git Status", status)  # print the status to the screen
+    git_add(repo)  # prompt the user to add the repo
+
+
+def git_add(repo):
+    content = text_box.get("1.0", "end-1c")  # get all the text from the text box
+    get_user_file = simpledialog.askstring("Find", "Enter the path of the file you wish to edit:")
+
+    with open(get_user_file, "w") as file:
+        file.write(content)  # write the content to the file
+
+    repo.git.add(get_user_file)  # add the file
+    git_commit(repo)  # call the git_commit function
+
+
+def git_commit(repo):
+    commit_message = simpledialog.askstring("Commit", "Enter the commit message:")
+    repo.git.commit(message=commit_message)  # commit the file and send the user's message
+
+    # ask the user if they want to push the repo
+    ask_push = messagebox.askyesno("Push?", "Do you want to push the changes?")
+    if ask_push:
+        git_push(repo)  # call the push function
+        messagebox.showinfo("Pushed", "Successfully pushed changes.")
+
+
+def git_push(repo):
+    origin = repo.remote("origin")
+    origin.push()  # push remotely
 
 
 root = tk.Tk()
@@ -221,7 +271,7 @@ plus_button.pack(side=tk.LEFT, padx=5)
 find_and_replace_label = tk.Button(button_frame, text="Find", command=find_word)
 find_and_replace_label.pack(side=tk.LEFT, padx=5)
 
-git_hub_button = tk.Button(button_frame, text="GitHub", command=git_commit)
+git_hub_button = tk.Button(button_frame, text="GitHub", command=git_commands)
 git_hub_button.pack(side=tk.LEFT, padx=5)
 
 word_count_frame = tk.Frame(root)  # frame for word count label and char count label
