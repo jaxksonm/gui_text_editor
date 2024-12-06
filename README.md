@@ -5,7 +5,4 @@ Users can also save their file. Word and character count is also displayed.
 
 Git integration for this project is currently in the works. For now, it is mostly a demo mode. 
 
-NOTE: Bug on linux operating systems where font menu closes if you do not hold the menu down with the mouse. 
-
-Other bug on Linux operating systems where the font menu's dimensions are not large enough to display all fields.
-"Light mode" is cut off unless window is expanded.
+NOTE: If you are on a linux operating system please use the vimreimagined_for_linux.py file.
