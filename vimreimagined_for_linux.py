@@ -259,20 +259,29 @@ def git_add(repo):
 
 def git_commit(repo):
     commit_message = simpledialog.askstring("Commit", "Enter the commit message:")
-    repo.git.commit(message=commit_message)  # commit the file and send the user's message
+    try:
+        repo.git.commit(message=commit_message)  # commit the file and send the user's message
+
+    except Exception as e:
+        messagebox.showerror("Error", str(e))  # catch all
 
     # ask the user if they want to push the repo
     ask_push = messagebox.askyesno("Push?", "Do you want to push the changes?")
     if ask_push:
         git_push(repo)  # call the push function
-        messagebox.showinfo("Pushed", "Successfully pushed changes.")
     else:
         messagebox.showinfo("Not Pushed", "No changes pushed.")
 
 
 def git_push(repo):
     origin = repo.remote("origin")
-    origin.push()  # push remotely
+    try:
+        origin.push()  # push remotely
+        messagebox.showinfo("Pushed", "Successfully pushed changes.")
+
+
+    except git.exc.GitCommandError as e:  # catch
+        messagebox.showerror("Error", str(e))
 
 
 root = tk.Tk()
