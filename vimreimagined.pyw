@@ -115,14 +115,23 @@ def fonts():
 def save_the_file():
     # thank you https://www.youtube.com/watch?v=Klp2Q462chU for file logic
     # open the file menu
-    file = filedialog.asksaveasfile(defaultextension=".txt",  # set a default file extension.
-                                    filetypes=[("Text Files", "*.txt")])
+    file_path = filedialog.asksaveasfile(defaultextension=".txt",  # set a default file extension.
+                                         filetypes=[("Text Files", "*.txt")])
+
     # get all the user's text stored as a string
     file_text = str(text_box.get(1.0, tk.END))
     # write ot the file
-    file.write(file_text)
+    file_path.write(file_text)
     # close the file
-    file.close()
+    file_path.close()
+
+
+def open_the_file():
+    file_path = filedialog.askopenfilename(title="Open File", filetypes=[("All files", "*.*")])  # prompts open menu
+
+    with open(file_path, "r") as f:
+        text_box.delete(1.0, tk.END)  # clear the contents of the current file
+        text_box.insert(tk.END, f.read())  # insert the contents of the new file
 
 
 def file_manager():
@@ -134,6 +143,9 @@ def file_manager():
     # save file, saves file if they already have a name, else prompt save as
     save_file = tk.Button(font_window, text="Save as", command=save_the_file)
     save_file.pack(pady=10)
+
+    open_file = tk.Button(font_window, text="Open", command=open_the_file)
+    open_file.pack(pady=10)
 
 
 def clock():
@@ -281,7 +293,6 @@ def git_push(repo):
     try:
         origin.push()  # push remotely
         messagebox.showinfo("Pushed", "Successfully pushed changes.")
-
 
     except git.exc.GitCommandError as e:  # catch
         messagebox.showerror("Error", str(e))
