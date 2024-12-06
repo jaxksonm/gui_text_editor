@@ -1,4 +1,4 @@
-# vim reimagined - by Jackson McDonald - v5!
+# vim reimagined - by Jackson McDonald - v6!
 
 import tkinter as tk
 from tkinter import font  # for font selection
@@ -11,7 +11,7 @@ import git  # for git hub integration
 # this new configuration of the project has a demo version of git integration
 # https://www.geeksforgeeks.org/python-gui-tkinter/ - list of useful tkinter tools
 
-# version 5 is here - text preferences now change on selection - apply buttons removed
+# version 6 is here - git integration is included!
 
 # bold / italics were sadly removed in version 1 as they were deemed useless. RIP...
 # pack() is responsible for putting the buttons / windows on the GUI
@@ -196,10 +196,25 @@ def find_word():
 
 
 def get_git_repo():
-    # get the user's git repo
-    get_user_repo = simpledialog.askstring("Find", "Enter the path of your git repository:")
-    repo = git.Repo(get_user_repo)  # store the repo
-    return repo
+    while True:
+        # get the user's git repo
+        get_user_repo = simpledialog.askstring("Find", "Enter the path of your git repository:")
+        get_user_repo = get_user_repo.strip('"')  # windows path copies with " " - strip them
+        try:
+            repo = git.Repo(get_user_repo)  # store the repo
+            return repo
+
+        except git.exc.InvalidGitRepositoryError:  # catch non repo directory
+            messagebox.showerror("Invalid Repository", "That directory is not a git repository.")
+            continue
+
+        except FileNotFoundError:  # catch invalid directory
+            messagebox.showerror("Invalid Directory", "That directory does not exist.")
+            continue
+
+        except Exception as e:  # catch other exceptions
+            messagebox.showerror("Error", str(e))
+            continue
 
 
 def git_commands():
@@ -207,7 +222,7 @@ def git_commands():
     user_repo = get_git_repo()
     git_window = tk.Toplevel(root)
     git_window.title("Git Commands")
-    git_window.geometry("300x300")
+    git_window.geometry("100x100")
 
     # buttons with in "File"
     # save file, saves file if they already have a name, else prompt save as
@@ -223,13 +238,26 @@ def git_status(repo):
 
 def git_add(repo):
     content = text_box.get("1.0", "end-1c")  # get all the text from the text box
-    get_user_file = simpledialog.askstring("Find", "Enter the path of the file you wish to edit:")
+    while True:
+        try:
+            get_user_file = simpledialog.askstring("Find", "Enter the path of the file you wish to edit:")
+            get_user_file = get_user_file.strip('"')
+            if not get_user_file:
+                messagebox.showinfo("Exiting...", "Operation cancelled")
+                break
 
-    with open(get_user_file, "w") as file:
-        file.write(content)  # write the content to the file
+            with open(get_user_file, "w") as file:
+                file.write(content)  # write the content to the file
 
-    repo.git.add(get_user_file)  # add the file
-    git_commit(repo)  # call the git_commit function
+            repo.git.add(get_user_file)  # add the file
+            git_commit(repo)  # call the git_commit function
+            break  # break for if the user opted not to push changes
+
+        except FileNotFoundError:  # catch file not found
+            messagebox.showerror("Invalid Directory", "That directory does not exist.")
+
+        except Exception as e:  # catch all other exceptions
+            messagebox.showerror("Error", str(e))
 
 
 def git_commit(repo):
@@ -241,6 +269,8 @@ def git_commit(repo):
     if ask_push:
         git_push(repo)  # call the push function
         messagebox.showinfo("Pushed", "Successfully pushed changes.")
+    else:
+        messagebox.showinfo("Not Pushed", "No changes pushed.")
 
 
 def git_push(repo):
