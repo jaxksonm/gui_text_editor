@@ -365,3 +365,5 @@ root.mainloop()  # this runs the entire code
 # ideas
 # built in calculator would be nice
 # highlighted font manipulation
+
+# eventually merge both files using import os
