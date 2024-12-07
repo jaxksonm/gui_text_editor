@@ -1,6 +1,5 @@
 # FOR LINUX
 # vim reimagined - by Jackson McDonald - v6!
-
 import tkinter as tk
 from tkinter import filedialog  # for saving the file
 import time  # for getting the time for a time function
@@ -122,6 +121,14 @@ def save_the_file():
     file.close()
 
 
+def open_the_file():
+    file_path = filedialog.askopenfilename(title="Open File", filetypes=[("All files", "*.*")])  # prompts open menu
+
+    with open(file_path, "r") as f:
+        text_box.delete(1.0, tk.END)  # clear the contents of the current file
+        text_box.insert(tk.END, f.read())  # insert the contents of the new file
+
+
 def file_manager():
     font_window = tk.Toplevel(root)
     font_window.title("File Manager")
@@ -131,6 +138,9 @@ def file_manager():
     # save file, saves file if they already have a name, else prompt save as
     save_file = tk.Button(font_window, text="Save as", command=save_the_file)
     save_file.pack(pady=10)
+
+    open_file = tk.Button(font_window, text="Open", command=open_the_file)
+    open_file.pack(pady=10)
 
 
 def clock():
